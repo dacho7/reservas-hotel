@@ -1,5 +1,5 @@
 import { Router } from "express";
-import controller from "../controllers/habitaciones.controller";
+import controller from "../controllers/reservas.controller";
 
 const router = Router();
 
@@ -29,15 +29,14 @@ const router = Router();
  *      type: number
  *      description: Valor que esta pagando al realiar la reserva
  *    required:
- *     - num_reserva
  *     - num_hab
  *     - n_cliente
  *     - metodo_pago
  *     - mon_pago
  *    example:
- *     num_reserva: Reserva para 2 personas, vista a la playa
- *     num_hab: desayuno, almuerzo
- *     metodo_pago: Disponible
+ *     n_cliente: 3d4s-43243-9saf
+ *     num_hab: f4ad-g9fd-l123
+ *     metodo_pago: Efectivo
  *     mon_pago: 200
  *  paremeters:
  *   idReserva:
@@ -67,106 +66,48 @@ const router = Router();
  */
 router.route("/").get((req, res, next) => {
   controller
-    .getTodasHabitaciones()
-    .then((classes) => res.status(200).send(classes))
+    .getReservaciones()
+    .then((resrevas) => res.status(200).send(resrevas))
     .finally(next);
 });
 
 /**
  * @swagger
- * /api/reservas/{id}:
- *  get:
- *   summary: Obten informacion de una reservacion
- *   tags: [Reserva]
- *   parameters:
- *    - $ref: '#/components/paremeters/idReserva'
- *   responses:
- *    200:
- *     description: datos de una tarea con id encontrada
- *     content:
- *      application/json:
- *       schema:
- *        $ref: '#/components/schemas/Reserva'
- *    400:
- *     description: la tarea no fue encontrada
- */
-router.route("/:id").get((req, res, next) => {
-  controller
-    .getHabitacionesDisponibles()
-    .then((reserva) => {
-      if (reserva) {
-        res.status(200).send(reserva);
-      } else {
-        res.status(400).send();
-      }
-    })
-    .finally(next);
-});
-
-/**
- * @swagger
- * /api/habitaciones/ocupadas:
- *  get:
- *   summary: Obten una lista de todas las habitaciones
- *   tags: [Habitacion]
- *   responses:
- *    200:
- *     descripción: lista de habitaciones
- *     content:
- *      application/json:
- *       schema:
- *        type: array
- *        items:
- *         $ref: '#/components/schemas/Habitacion'
- */
-router.route("/ocupadas").get((req, res, next) => {
-  controller
-    .getHabitacionesOcupadas()
-    .then((classes) => res.status(200).send(classes))
-    .finally(next);
-});
-
-/**
- * @swagger
- * /api/habitaciones:
+ * /api/reservas:
  *  post:
- *   summary: Crea una nueva habitacion
- *   tags: [Habitacion]
+ *   summary: Crea una nueva Reserva
+ *   tags: [Reserva]
  *   requestBody:
  *    required: true
  *    content:
  *     application/json:
  *      schema:
- *       $ref: '#/components/schemas/Habitacion'
+ *       $ref: '#/components/schemas/Reserva'
  *   responses:
  *    200:
  *     descripción: Habitacion creada
  *     content:
  *      application/json:
  *       schema:
- *        $ref: '#/components/schemas/Habitacion'
+ *        $ref: '#/components/schemas/Reserva'
  *    500:
  *     description: Error al crear la habitacion
  */
 router.route("/").post((req, res, next) => {
   controller
-    .crearHabitacion(
-      req.body.descripcion,
-      req.body.servicios,
-      req.body.estado,
-      req.body.costo
+    .crearReserva(
+      req.body.num_hab,
+      req.body.n_cliente,
+      req.body.metodo_pago,
+      req.body.mon_pago
     )
-    .then((nuevaHabitacion) => {
-      if (nuevaHabitacion !== null) {
-        res
-          .location(req.baseUrl + "/" + String(nuevaHabitacion.id_hab))
-          .status(201)
-          .send(nuevaHabitacion);
-      } else {
-        res.status(400).send();
-      }
-    })
-    .catch((e) => {
+    .then((nuevaReserva: any) =>
+      res
+        .location(req.baseUrl + "/" + String(nuevaReserva.num_reserva))
+        .status(201)
+        .send(nuevaReserva)
+    )
+    .catch(() => {
       res.status(500).send();
     })
     .finally(next);

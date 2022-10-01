@@ -157,7 +157,7 @@ router.route("/").post((req, res, next) => {
 /**
  * @swagger
  * /api/habitaciones/{id}:
- *  post:
+ *  put:
  *   summary: actualizar datos de una habitacion
  *   parameters:
  *    - $ref: '#/components/parameters/idHabitacion'

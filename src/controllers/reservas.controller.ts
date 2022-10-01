@@ -1,11 +1,43 @@
 import { v4 as uuidv4 } from "uuid";
-import { Reservacion } from "../models";
+import { Reservacion, Habitacion } from "../models";
 
 async function getReservaciones(): Promise<any[]> {
   return await Reservacion.findAll({
-    order: [["id_hab", "ASC"]],
-    attributes: ["id_hab", "descripcion", "servicios", "estado", "costo"],
+    attributes: [
+      "num_reserva",
+      "num_hab",
+      "n_cliente",
+      "estado",
+      "metodo_pago",
+      "mon_pago",
+    ],
   });
+}
+
+async function crearReserva(
+  num_hab: string,
+  n_cliente: string,
+  metodo_pago: string,
+  mon_pago: number
+): Promise<Reservacion | null> {
+  const habitacion = await Habitacion.findOne({
+    where: { id_hab: num_hab },
+  });
+  if (habitacion?.estado === "Disponible") {
+    let _reserva = await Reservacion.create({
+      num_reserva: uuidv4(),
+      num_hab,
+      n_cliente,
+      metodo_pago,
+      mon_pago,
+      estado: mon_pago === habitacion.costo ? "Pagado" : "Pendiente",
+    });
+    habitacion.estado = "Ocupado";
+    await habitacion.save();
+    return _reserva;
+  } else {
+    return null;
+  }
 }
 
 async function getReserva(idReserva: string): Promise<Reservacion | null> {
@@ -14,8 +46,7 @@ async function getReserva(idReserva: string): Promise<Reservacion | null> {
   });
   if (!reservaDb) {
     return null;
-  }
-  return reservaDb;
+  } else return reservaDb;
 }
 
 async function crearHabitacion(
@@ -48,16 +79,19 @@ async function updateHabitacion(
   costo: number
 ): Promise<Reservacion | null> {
   let _habitacion = await Reservacion.findOne({ where: { id_hab } });
-  if (_habitacion) {
-    _habitacion.descripcion = descripcion;
-    _habitacion.servicios = servicios;
-    _habitacion.costo = costo;
-    await _habitacion.save();
-    return _habitacion;
-  }
+  // if (_habitacion) {
+  //   _habitacion.descripcion = descripcion;
+  //   _habitacion.servicios = servicios;
+  //   _habitacion.costo = costo;
+  //   await _habitacion.save();
+  //   return _habitacion;
+  // }
+  return _habitacion;
   return null;
 }
 
 export default {
   getReservaciones,
+  crearReserva,
+  getReserva,
 };
