@@ -38,9 +38,28 @@ async function crearHabitacion(
   return _habitacion;
 }
 
+async function editarHabitacion(
+  id_hab: string,
+  descripcion: string,
+  servicios: string,
+  estado: string,
+  costo: number
+): Promise<Habitacion | null> {
+  let _habitacion = await Habitacion.findOne({ where: { id_hab } });
+  if (_habitacion) {
+    _habitacion.descripcion = descripcion;
+    _habitacion.servicios = servicios;
+    _habitacion.estado = estado;
+    _habitacion.costo = costo;
+    await _habitacion.save();
+  }
+  return null;
+}
+
 export default {
   getTodasHabitaciones,
   getHabitacionesDisponibles,
   getHabitacionesOcupadas,
   crearHabitacion,
+  editarHabitacion,
 };

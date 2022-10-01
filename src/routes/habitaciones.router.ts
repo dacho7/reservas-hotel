@@ -12,7 +12,7 @@ const router = Router();
  *    propierties:
  *     id_hab:
  *      type: string
- *      description: relacionado a la habitacion
+ *      description: identificacion relacionado a la habitacion
  *     descripcion:
  *      type: string
  *      description: descripcion de la habitacion
@@ -34,8 +34,15 @@ const router = Router();
  *     servicios: desayuno, almuerzo
  *     estado: Disponible
  *     costo: 200
+ *  parameters:
+ *   idHabitacion:
+ *    in: path
+ *    name: id
+ *    required: true
+ *    schema:
+ *     type: string
+ *    description: id de una habitacion
  */
-
 /**
  * @swagger
  * /api/habitaciones:
@@ -63,7 +70,7 @@ router.route("/").get((req, res, next) => {
  * @swagger
  * /api/habitaciones/disponibles:
  *  get:
- *   summary: Obten una lista de todas las habitaciones
+ *   summary: Obten una lista de todas las habitaciones disponibles
  *   tags: [Habitacion]
  *   responses:
  *    200:
@@ -86,7 +93,7 @@ router.route("/disponibles").get((req, res, next) => {
  * @swagger
  * /api/habitaciones/ocupadas:
  *  get:
- *   summary: Obten una lista de todas las habitaciones
+ *   summary: Obten una lista de todas las habitaciones ocupadas
  *   tags: [Habitacion]
  *   responses:
  *    200:
@@ -141,6 +148,48 @@ router.route("/").post((req, res, next) => {
         .status(201)
         .send(nuevaHabitacion)
     )
+    .catch((e) => {
+      res.status(500).send();
+    })
+    .finally(next);
+});
+
+/**
+ * @swagger
+ * /api/habitaciones/{id}:
+ *  post:
+ *   summary: actualizar datos de una habitacion
+ *   parameters:
+ *    - $ref: '#/components/parameters/idHabitacion'
+ *   tags: [Habitacion]
+ *   requestBody:
+ *    required: true
+ *    content:
+ *     application/json:
+ *      schema:
+ *       $ref: '#/components/schemas/Habitacion'
+ *   responses:
+ *    200:
+ *     description: obtiene la habitacion actualizada
+ *     content:
+ *      application/json:
+ *       schema:
+ *        $ref: '#/components/schemas/Habitacion'
+ *    400:
+ *     description: la habitacion no existe
+ *    500:
+ *     description: error con los datos
+ */
+router.route("/:idHabitacion").put((req, res, next) => {
+  controller
+    .editarHabitacion(
+      req.params.idHabitacion,
+      req.body.descripcion,
+      req.body.servicios,
+      req.body.estado,
+      req.body.costo
+    )
+    .then((habitacion) => res.status(201).send(habitacion))
     .catch((e) => {
       res.status(500).send();
     })

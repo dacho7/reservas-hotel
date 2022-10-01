@@ -1,6 +1,7 @@
 import { DataTypes, Model, Sequelize } from "sequelize";
 
 class Reservacion extends Model {
+  public num_reserva!: string;
   public num_hab!: string;
   public n_cliente!: string;
   public estado!: string;
@@ -10,13 +11,15 @@ class Reservacion extends Model {
   public static initialize(sequelize: Sequelize) {
     this.init(
       {
-        id_hab: {
+        num_reserva: {
           type: DataTypes.STRING,
           primaryKey: true,
         },
-        servicios: DataTypes.STRING,
-        descripcion: DataTypes.STRING,
-        costo: DataTypes.INTEGER,
+        num_hab: DataTypes.STRING,
+        n_cliente: DataTypes.STRING,
+        estado: DataTypes.STRING,
+        metodo_pago: DataTypes.STRING,
+        mon_pago: DataTypes.INTEGER,
       },
       { sequelize }
     );
