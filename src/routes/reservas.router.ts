@@ -34,11 +34,11 @@ const router = Router();
  *     - metodo_pago
  *     - mon_pago
  *    example:
- *     n_cliente: 3d4s-43243-9saf
+ *     n_cliente: 1082412312
  *     num_hab: f4ad-g9fd-l123
  *     metodo_pago: Efectivo
  *     mon_pago: 200
- *  paremeters:
+ *  parameters:
  *   idReserva:
  *    in: path
  *    name: id
@@ -90,8 +90,10 @@ router.route("/").get((req, res, next) => {
  *      application/json:
  *       schema:
  *        $ref: '#/components/schemas/Reserva'
- *    500:
+ *    400:
  *     description: Error al crear la habitacion
+ *    500:
+ *     description: Error con los datos
  */
 router.route("/").post((req, res, next) => {
   controller
@@ -101,14 +103,102 @@ router.route("/").post((req, res, next) => {
       req.body.metodo_pago,
       req.body.mon_pago
     )
-    .then((nuevaReserva: any) =>
-      res
-        .location(req.baseUrl + "/" + String(nuevaReserva.num_reserva))
-        .status(201)
-        .send(nuevaReserva)
-    )
-    .catch(() => {
+    .then((nuevaReserva: any) => {
+      if (nuevaReserva) {
+        res
+          .location(req.baseUrl + "/" + String(nuevaReserva.num_reserva))
+          .status(201)
+          .send(nuevaReserva);
+      } else {
+        res.status(400).send({ ok: false, err: "habitacion no disponible" });
+      }
+    })
+    .catch((e) => {
       res.status(500).send();
+    })
+    .finally(next);
+});
+
+/**
+ * @swagger
+ * /api/reservas/{id}:
+ *  get:
+ *   summary: obtener los datos de una reserva
+ *   parameters:
+ *    - $ref: '#/components/parameters/idReserva'
+ *   tags: [Reserva]
+ *   responses:
+ *    200:
+ *     description: retorna los datos de una reserva
+ *     content:
+ *      application/json:
+ *       schema:
+ *        $ref: '#/components/schemas/Reserva'
+ *    400:
+ *     description: la reserva no fue encontrada
+ */
+
+router.route("/:idRes").get((req, res, next) => {
+  controller
+    .getReserva(req.params.idRes)
+    .then((reserva) => {
+      if (reserva) {
+        res.status(200).send(reserva);
+      } else {
+        res.status(400).send({ ok: false, err: "Reserva no encontrada" });
+      }
+    })
+    .finally(next);
+});
+
+/**
+ * @swagger
+ * /api/reservas/{id}:
+ *  put:
+ *   summary: actualizar datos de una Reserva
+ *   parameters:
+ *    - $ref: '#/components/parameters/idReserva'
+ *   tags: [Reserva]
+ *   requestBody:
+ *    required: true
+ *    content:
+ *     application/json:
+ *      schema:
+ *       $ref: '#/components/schemas/Reserva'
+ *   responses:
+ *    200:
+ *     description: obtiene la habitacion actualizada
+ *     content:
+ *      application/json:
+ *       schema:
+ *        $ref: '#/components/schemas/Reserva'
+ *    400:
+ *     description: la habitacion no existe
+ *    500:
+ *     description: error con los datos
+ */
+router.route("/:idRes").put((req, res, next) => {
+  console.log("parametros", req.params);
+  controller
+    .editarReserva(
+      req.params.idRes,
+      req.body.num_hab,
+      req.body.n_cliente,
+      req.body.estado,
+      req.body.metodo_pago,
+      req.body.mon_pago
+    )
+    .then((habitacion) => {
+      if (habitacion) {
+        res.status(201).send(habitacion);
+      } else {
+        res
+          .status(500)
+          .send({ ok: false, err: "no existe esa Reserva o esa habitacion" });
+      }
+    })
+    .catch((e) => {
+      res.status(500).send({ ok: false, err: "valor no valido" });
     })
     .finally(next);
 });

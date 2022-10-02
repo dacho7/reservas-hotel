@@ -149,7 +149,7 @@ router.route("/").post((req, res, next) => {
         .send(nuevaHabitacion)
     )
     .catch((e) => {
-      res.status(500).send();
+      res.status(500).send({ ok: false, err: "costo no valido" });
     })
     .finally(next);
 });
@@ -189,9 +189,15 @@ router.route("/:idHabitacion").put((req, res, next) => {
       req.body.estado,
       req.body.costo
     )
-    .then((habitacion) => res.status(201).send(habitacion))
+    .then((habitacion) => {
+      if (habitacion) {
+        res.status(201).send(habitacion);
+      } else {
+        res.status(500).send({ ok: false, err: "no existe esa habitacion" });
+      }
+    })
     .catch((e) => {
-      res.status(500).send();
+      res.status(500).send({ ok: false, err: "costo no valido" });
     })
     .finally(next);
 });

@@ -52,6 +52,7 @@ async function editarHabitacion(
     _habitacion.estado = estado;
     _habitacion.costo = costo;
     await _habitacion.save();
+    return _habitacion;
   }
   return null;
 }
