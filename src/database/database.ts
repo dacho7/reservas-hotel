@@ -1,11 +1,13 @@
 import { Sequelize } from "sequelize";
 
-export const sequelize = new Sequelize({
+export const sequelizeDB = new Sequelize({
   dialect: "postgres",
-  host: "localhost",
+  database: "reservas",
   username: "postgres",
   password: "reservas1",
-  port: 5543,
+  host: "localhost",
+  port: 5432,
+  logging: false,
   define: {
     timestamps: false,
   },

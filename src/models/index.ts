@@ -1,10 +1,8 @@
 import Habitacion from "./Habitacion";
 import Reservacion from "./Reservacion";
-import { sequelize } from "../database/database";
+import { sequelizeDB } from "../database/database";
 
 let models = [Habitacion, Reservacion];
-models.forEach((model) => model.initialize(sequelize));
+models.forEach((model) => model.initialize(sequelizeDB));
 
-sequelize.sync({ force: true });
-
-export { sequelize as Database, Habitacion, Reservacion };
+export { sequelizeDB, Habitacion, Reservacion };

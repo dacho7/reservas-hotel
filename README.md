@@ -2,7 +2,13 @@
 Api para realizar reservaciones en un hotel
 
 En esta api cuenta con las operaciones necesarias para realizar reservaciones de habitaciones de un hotel
-NOTA: revisar la documentacion de los endPoints generadas por la aplicacion, en la ruta http:/host:3000/docs, http://localhost:3000/docs
+
+## Instalacion
+Ejecutar docker-compose 
+docker-compose up --build -d
+docker-run <nombre-container>
+
+# NOTA: revisar la documentacion de los endPoints generadas por la aplicacion, en la ruta http:/host:3000/docs, http://localhost:3000/docs
 
 Para este modelo de negocio se creo una base de datos que contiene registros de habitaciones y reservaciones
 las habitaciones contienen detalles como descripcion, servicios, y costo y un estado que puede ser Ocupado o Disponible
