@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
-import { Reservacion, Habitacion } from "../models";
+import Habitacion from "../models/Habitacion";
+import Reservacion from "../models/Reservacion";
 
 async function getReservaciones(): Promise<any[]> {
   return await Reservacion.findAll({

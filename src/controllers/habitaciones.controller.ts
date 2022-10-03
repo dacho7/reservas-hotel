@@ -1,6 +1,5 @@
-import { where } from "sequelize";
 import { v4 as uuidv4 } from "uuid";
-import { Habitacion } from "../models";
+import Habitacion from "../models/Habitacion";
 
 async function getTodasHabitaciones(): Promise<any[]> {
   return await Habitacion.findAll({

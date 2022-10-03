@@ -1,29 +1,25 @@
-import { DataTypes, Model, Sequelize } from "sequelize";
+import { Table, Column, Model, PrimaryKey } from "sequelize-typescript";
 
+@Table
 class Reservacion extends Model {
+  @PrimaryKey
+  @Column
   public num_reserva!: string;
-  public num_hab!: string;
-  public n_cliente!: string;
-  public estado!: string;
-  public metodo_pago!: string;
-  public mon_pago!: number;
 
-  public static initialize(sequelize: Sequelize) {
-    this.init(
-      {
-        num_reserva: {
-          type: DataTypes.STRING,
-          primaryKey: true,
-        },
-        num_hab: DataTypes.STRING,
-        n_cliente: DataTypes.STRING,
-        estado: DataTypes.STRING,
-        metodo_pago: DataTypes.STRING,
-        mon_pago: DataTypes.INTEGER,
-      },
-      { sequelize }
-    );
-  }
+  @Column
+  public num_hab!: string;
+
+  @Column
+  public n_cliente!: string;
+
+  @Column
+  public estado!: string;
+
+  @Column
+  public metodo_pago!: string;
+
+  @Column
+  public mon_pago!: number;
 }
 
 export default Reservacion;
