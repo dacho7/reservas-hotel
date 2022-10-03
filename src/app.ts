@@ -7,7 +7,7 @@ import router from "./routes";
 
 const app = express();
 
-app.set("port", process.env.PORT || 3100);
+app.set("port", process.env.PORT || 3000);
 app.use(cors());
 app.use(express.json());
 app.use("/docs", swaggerUI.serve, swaggerUI.setup(swaggerJSDoc(options)));

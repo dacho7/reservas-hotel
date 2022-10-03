@@ -7,7 +7,7 @@ const sequelizeDB = new Sequelize({
   database: "testdb",
   username: "user",
   password: "12345678",
-  host: "localhost",
+  host: "mymysql",
   port: 3306,
   logging: false,
   define: {
