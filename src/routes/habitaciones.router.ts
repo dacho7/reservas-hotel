@@ -30,6 +30,7 @@ const router = Router();
  *     - servicios
  *     - costo
  *    example:
+ *     id_hab: a4f8fe52-dda5-42ed-8a1c-b16c6a016da0
  *     descripcion: habitacion para 2 personas, vista a la playa
  *     servicios: desayuno, almuerzo
  *     estado: Disponible

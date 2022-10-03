@@ -9,9 +9,7 @@ services:
       - "3000:3000"
     environment:
       - PORT:3000
-    depends_on:
-      - mysql
-  mysql:
+  mymysql:
     image: mysql
     restart: always
     volumes:
